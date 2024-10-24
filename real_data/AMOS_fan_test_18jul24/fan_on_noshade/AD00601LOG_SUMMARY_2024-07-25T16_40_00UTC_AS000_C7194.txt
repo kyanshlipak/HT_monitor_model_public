@@ -1,0 +1,60 @@
+PARAMETER,VALUE,UNITS/NOTES
+UPASserial,0601,(UPAS serial identification-numerical)
+UPASfirmware,UPAS_PMS_Box_v2_0-rev_00303-L476RE_20240317_mbedOS-6_16_0.bin compiled Mar 17 2024_21:54:49 UTC,(installed firmware version)
+LifetimeSampleCount,50,(count-total lifetime sample runs)
+LifetimeSampleRuntime,1383.35,(hrs-total lifetime cumulative sample runtime)
+
+
+
+
+FLOW CALIBRATION COEFFICIENTS
+
+MF4,-0.623097,(coefficient)
+MF3,4.227819,(coefficient)
+MF2,-8.945368,(coefficient)
+MF1,8.972915,(coefficient)
+MF0,-2.854830,(coefficient)
+MFSVoltMin,0.540000,(V)
+MFSVoltMax,2.048500,(V)
+MFSMFMin,-0.005178,(g*min^-1)
+MFSMFMax,3.362000,(g*min^-1)
+
+
+
+
+SAMPLE IDENTIFICATION
+
+LogFilename,,(log file filename-automatically defined)
+ParticpantID,AS000,(Participant ID scanned by app)
+CartridgeID,C7194,(Cartridge Id scanned by app)
+
+
+
+
+SETUP SUMMARY
+
+GPSUTCOffset,-6.00,(hours offset from UTC date time)
+ProgrammedRuntime,604800,(s) (360000000 means 'indefinite')
+VolumetricFlowRate,1.000,(L*min^-1)
+FlowOffset,0.000000,(%)
+DutyCycle,100,(%)
+DutyCycleWindow,30,(s)
+GPSEnabled,1,(0=no 1=yes)
+LogInterval,30,(s)
+SampleLat,40.593529,(decimalDegree)
+SampleLon,-105.076218,(decimalDegree)
+AppVersion,i2.0.4,(i=iOS A=Android)
+
+
+
+
+SAMPLE SUMMARY
+
+StartDateTimeUTC,2024-07-25T16:40:00,(YYYY-MM-DDTHH:MM:SS) (UTC date time format)
+StartBatteryCharge,100,(%)
+StartBatteryVoltage,13.35,(V)
+EndDateTimeUTC,2024-07-29T00:14:03,EndBatteryCharge,045,(%)
+EndBatteryVoltage,11.37,(V)SampledVolume, 4761.15,(L)
+SampledRuntime, 79.576,(Hr)
+LoggedRuntime, 79.576,(Hr)
+AverageVolumetricFlowRate,0.997
