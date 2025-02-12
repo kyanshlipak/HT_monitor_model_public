@@ -1046,7 +1046,7 @@ def is_datetime_in_ranges(dt, ranges):
 # run the full model with reduced memory (no full Temperatures array)
 def run_model_reduced_complexity_and_memory(latitude, longitude, logging, interval, run_interval, start_date_time, df, fan_speed_func, air_velocity_func, internal_radiation_T_func, angle_of_incidence_func, q_flux_func,
               convection_func, t_final, T_max, T_infinity_func, T_initial, k, rho, Cp, G_func, emissivity, absorptivity, B_air, v_air, k_air, alpha_air,
-              thicknesses, L = 0.2, W = 0.1, H = 0.1, N = 50, h_max = 100, include_internal_effects = False, stop_event = None, box_shading = False, shading_ranges = []):
+              thicknesses, L = 0.2, W = 0.1, H = 0.1, N = 50, h_max = 100, include_internal_effects = False, stop_event = None, box_shading = False, shading_ranges = [], fan_mixing_ratio = 0.1):
   # print that it is running
   """
   Run a full numerical model for thermal dynamics with reduced memory usage by omitting the temperatures array.
@@ -1320,7 +1320,7 @@ def run_model_reduced_complexity_and_memory(latitude, longitude, logging, interv
       T_next[0] = 2 * Fo * (T_previous[1] + Bi * T_infinity + dx / k * absorptivity * new_G * rad_factor + dx /k * sigma * absorptivity * T_infinity ** 4) + (1 - 2 * Fo - 2 * Bi * Fo - Fo * 2 * dx / k * emissivity * sigma * T_previous[0]**3) * T_previous[0]
 
       if fan_speed > 0:
-        bulk_air_temp = avg_temp[n-1]
+        bulk_air_temp = avg_temp[n-1] * (1-fan_mixing_ratio) + outside_temp[n-1] * fan_mixing_ratio
       else:
         bulk_air_temp = avg_temp[n-1]
 
@@ -1381,7 +1381,7 @@ def run_model_reduced_complexity_and_memory(latitude, longitude, logging, interv
 # run the full model with linear approximations to reduce computational time, currently unused
 def run_model_reduced_complexity(latitude, longitude, logging, interval, run_interval, start_date_time, df, fan_speed_func, air_velocity_func, internal_radiation_T_func, internal_radiative_heat_transfer_func, angle_of_incidence_func, q_flux_func,
               convection_func, t_final, T_max, T_infinity_func, T_initial, k, rho, Cp, G_func, emissivity, absorptivity, B_air, v_air, k_air, alpha_air,
-              battery_Cp, battery_mass, battery_lengths, battery_emissivity, thicknesses, L = 0.2, W = 0.1, H = 0.1, N = 50, h_max = 100, include_internal_effects = False, box_shading = False, shading_ranges = []):
+              battery_Cp, battery_mass, battery_lengths, battery_emissivity, thicknesses, L = 0.2, W = 0.1, H = 0.1, N = 50, h_max = 100, include_internal_effects = False, box_shading = False, shading_ranges = [], fan_mixing_ratio = 0.1):
   """
   Run a full numerical model for thermal dynamics with reduced memory usage by omitting the temperatures array.
   
@@ -1652,7 +1652,7 @@ def run_model_reduced_complexity(latitude, longitude, logging, interval, run_int
       T_next[0] = 2 * Fo * (T_previous[1] + Bi * T_infinity + dx / k * absorptivity * new_G * rad_factor + dx /k * sigma * absorptivity * T_infinity ** 4) + (1 - 2 * Fo - 2 * Bi * Fo - Fo * 2 * dx / k * emissivity * sigma * T_previous[0]**3) * T_previous[0]
 
       if fan_speed > 0:
-        bulk_air_temp = avg_temp[n-1]
+        bulk_air_temp = avg_temp[n-1] * (1- fan_mixing_ratio) + outside_temp[n-1] * fan_mixing_ratio
       else:
         bulk_air_temp = avg_temp[n-1]
 
