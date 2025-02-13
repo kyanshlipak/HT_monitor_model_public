@@ -1,5 +1,5 @@
 """
-File: validation.py
+File: solar_foco_analysis.py
 
 Description:
 ------------
@@ -101,7 +101,7 @@ def load_data(results_dir, base_time  = datetime(2024, 6, 19, 9, 0, 0)):
 		os.remove(file_path)
 
 	# Create a pandas DataFrame
-	os.rmdir(results_dir)
+	#os.rmdir(results_dir)
 	model_df = pd.DataFrame({'seconds_past': time_steps})
 
 	# Convert seconds_past to Timedelta and add to base_time
@@ -232,8 +232,9 @@ def import_and_plot(path, start_date_time, end_date_time, logging, window_length
 	plot_real_data(sensor_readings_df, smoothed_df, labels_dict, start_date_time, end_date_time, logging)
 	return sensor_readings_df, smoothed_df
 
-# plot comparison of raspi and model data
-def plot_comparison(smoothed_df, model_dfs, start_date_time, end_date_time, col1 = '2_smooth', col2 = '3_smooth', title = "Temperature Over Time"):
+def plot_comparison(smoothed_df, model_dfs, start_date_time, end_date_time, 
+                    col1='2_smooth', col2='3_smooth', title="Temperature Over Time", ignore_real = False, hour_interval = 3):
+	import matplotlib.dates as mdates
 	"""
 	Plot a comparison of real-world smoothed sensor data and modeled temperature data.
 
@@ -248,38 +249,57 @@ def plot_comparison(smoothed_df, model_dfs, start_date_time, end_date_time, col1
 
 	Returns:
 	None
-
-	Notes:
-	The Celsius data is converted to Fahrenheit, and the plot is saved as a PNG file.
 	"""
 
 	def to_F(num):
-		return num * 9/5 + 32
-	
-	import matplotlib.dates as mdates
-	smoothed_df = smoothed_df.loc[(smoothed_df.index >= start_date_time) & (smoothed_df.index <= end_date_time)]
+		return num  # Assuming Celsius is intended; update if Fahrenheit conversion is needed
 
+	# Filter the data based on the provided time range
+	smoothed_df = smoothed_df.loc[(smoothed_df.index >= start_date_time) & (smoothed_df.index <= end_date_time)]
 	smoothed_df['batt_avg'] = 0.5 * (smoothed_df[col1] + smoothed_df[col2])
 
-	fig, ax = plt.subplots(figsize = (12,8))
+	fig, ax = plt.subplots(figsize=(9, 6))
 
-	#plt.plot(smoothed_df['2_smooth'], label = "battery2 temperature with smoothing", color = "red")
-	#plt.plot(smoothed_df['3_smooth'], label = "battery3 temperature with smoothing", color = "red")
+	# Define colorblind-friendly colors
+	colorblind_colors = ['#0173B2', '#D55E00']  # Blue and orange
 
-	for model_dict in model_dfs:
-		plt.plot(to_F((model_dict['data'])['internal']-273.15), label = model_dict['label'])
-		#plt.plot((model_dict['data'])['battery_temp']-273.15, label = "modelled battery temp")
-	plt.plot(to_F(smoothed_df['batt_avg']), label = "Internal Battery Temperature")
+	# Determine marker spacing (~30 markers per line)
+	total_points = len(smoothed_df)
+	marker_spacing1 = max(1, total_points // 30)  # Ensure at least 1 to avoid div by zero
 
-	ax.xaxis.set_major_locator(plt.MaxNLocator(12))  # Limit to 12 date labels
-	ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d %H:%M:%S'))
+	if not ignore_real:
+		# Plot the smoothed internal battery temperature
+		ax.plot(smoothed_df.index, to_F(smoothed_df['batt_avg']), 
+				label="Internal Battery Temperature", 
+				marker='o', markevery=marker_spacing1, markersize=8, zorder = 3)
+		
+	markers = ['s', '^', 'd', 'v',  '*', 'X', 'P']
 
-	plt.xticks(rotation=45, fontsize = 14)  # Rotate x-axis labels for better readability
-	plt.yticks(fontsize = 14)
-	plt.ylabel('Temperature (F)', fontsize = 16)
-	plt.xlabel("Timestamp", fontsize = 14)
-	plt.title(title, fontsize = 20)
-	plt.legend(fontsize = 14)
+	# Plot modeled data with different markers
+	for i, model_dict in enumerate(model_dfs):
+		model_data = to_F(model_dict['data']['internal'] - 273.15)
+		marker_spacing2 = max(1, len(model_data) // np.random.randint(15, 25))  # Ensure at least 1 to avoid div by zero
+
+		ax.plot(model_dict['data'].index, model_data, 
+				label=model_dict['label'], 
+				#color=colorblind_colors[1],  # Consistent color
+				marker=markers[i % len(markers)],  # Cycle through marker list
+				markevery=marker_spacing2, 
+				markersize=10,
+				alpha = 0.8)
+
+	# Format x-axis ticks to display only hours
+	ax.xaxis.set_major_locator(mdates.HourLocator(interval=hour_interval))  # Set tick interval to 1 hour
+	ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))  # Format as HH:MM
+
+	# Axis labels, title, and legend
+	plt.xticks(rotation=45, fontsize=14)
+	plt.yticks(fontsize=14)
+	plt.ylabel('Temperature (C)', fontsize=16)
+	plt.xlabel("Time (HH:MM)", fontsize=14)
+	plt.title(title, fontsize=20)
+	plt.legend(fontsize=14)
+
 	plt.show()
 
 
