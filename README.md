@@ -51,7 +51,7 @@ The model will typically take just a few minutes to run, depending on the conduc
 
 ### Step 6: Demo outputs
 
-The demo outputs for the simulation run through the app in Step 5 and downloaded via the "Download Files" button is included in the "demo_data.pkl" pickle file of the repository. "Pickle" .pkl files are used due to the low data storage and can be read into a dataframe using the pandas python library, among other options.
+The demo outputs for the simulation run through the app in Step 5 and downloaded via the "Download Files" button is included in the demo_data folder. Outputs include the upper temperature bound, lower temperature bound, 2023 period modeled, and 10 year solar charging dataframes in the form of pickle files. "Pickle" .pkl files are used due to their low data storage requirements. They can be read into a dataframe using the pandas python library, among other options.
 
 ### Expected Installation Time
 
