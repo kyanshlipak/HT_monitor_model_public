@@ -1,4 +1,4 @@
-# Heat Transfer and Solar Charging Tool for Air Pollutant Monitors
+# Heat Transfer and Solar Charging Tool for Air Pollutant Monitors (Version 1.0 [2025])
 
 ## Overview
 
@@ -40,6 +40,27 @@ pip install -r requirements.txt
 ```bash
 python app.py
 ```
+
+### Step 5: Demo inputs
+
+Test a demo run by setting the latitude and longitude to your location and using the below parameters: Below is an image of the web application interface with example parameters:
+
+![Demo parameters](demo_parameters.png)
+
+The model will typically take just a few minutes to run, depending on the conductivity of the material chosen, duration of modeling, whether or not a solar panel is included, and if 10% & 90% bounds are used. A log output will print updates in real time.
+
+### Step 6: Demo outputs
+
+The demo outputs for the simulation run through the app in Step 5 and downloaded via the "Download Files" button is included in the "demo_data.pkl" pickle file of the repository. "Pickle" .pkl files are used due to the low data storage and can be read into a dataframe using the pandas python library, among other options.
+
+### Expected Installation Time
+
+The complete installation process, including dependency installation, should take approximately 5-10 minutes, depending on your system and internet speed.
+
+### Compatible Python Versions
+
+This tool is designed for Python 3.8.8, but it is also compatible with at least Python 3.7+. Other Python3 versions may be compatible but are not recommended.
+
 
 ## Usage
 
